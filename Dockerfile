@@ -1,7 +1,7 @@
 FROM debian:bullseye-slim
 
 ARG PROTOC_VERSION=3.20.1
-ARG PROTOC_GEN_GRPC_WEB_VERSION=1.3.1
+ARG PROTOC_GEN_GRPC_SWIFT_VERSION=1.10.0
 ARG INSTALL_PREFIX=/opt/protoc
 
 RUN apt-get update && \
@@ -13,8 +13,14 @@ RUN mkdir ${INSTALL_PREFIX} && \
         https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-$(arch).zip && \
     unzip protoc.zip && \
     rm -f protoc.zip && \
-    curl -L -o ./bin/protoc-gen-grpc-web https://github.com/grpc/grpc-web/releases/download/${PROTOC_GEN_GRPC_WEB_VERSION}/protoc-gen-grpc-web-${PROTOC_GEN_GRPC_WEB_VERSION}-linux-$(arch) && \
-    chmod +x ./bin/protoc-gen-grpc-web
+    curl -L -o protoc-grpc-swift-plugins.zip \
+        https://github.com/grpc/grpc-swift/releases/download/${PROTOC_GEN_GRPC_SWIFT_VERSION}/protoc-grpc-swift-plugins-linux-$(arch)-${PROTOC_GEN_GRPC_SWIFT_VERSION}.zip && \
+    unzip protoc-grpc-swift-plugins.zip && \
+    rm -f protoc-grpc-swift-plugins.zip && \
+    chmod +x protoc-gen-grpc-swift && \
+    chmod +x protoc-gen-swift && \
+    mv protoc-gen-grpc-swift bin/ && \
+    mv protoc-gen-swift bin/ 
 
 ENV PATH="${INSTALL_PREFIX}/bin:$PATH"
 
